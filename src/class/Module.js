@@ -44,6 +44,16 @@ class Module extends AbstractSyntaxTree {
 
   convert (options) {
     const define = this.first('CallExpression[callee.name=define]')
+    const moduleExports = this.first('MemberExpression[object.name=module][property.name=exports]')
+    const isUMD = (define && moduleExports) || ((define && define.arguments && define.arguments[0].type !== 'StringLiteral' && (define.arguments[define.arguments.length - 1].type !== 'FunctionExpression' && define.arguments[define.arguments.length - 1].type !== 'ArrowFunctionExpression')))
+    if (isUMD) {
+      // Convert UMD modules to AMD for import
+      // Usually a third party library
+      const functions = this.find('FunctionExpression')
+      define.arguments[define.arguments.length - 1] = functions[1]
+      this._tree.body[0].expression = define
+      this.isUMD = true
+    }
     if (isDefineWithObjectExpression(define)) {
       this._tree.body = [{
         type: 'ExportDefaultDeclaration',
@@ -133,10 +143,22 @@ class Module extends AbstractSyntaxTree {
   wrapMultipleReturns (node) {
     if (this.hasExportsDefault()) return
     const args = getDefineCallbackArguments(node)
-    if (args.body.type === 'BlockStatement') {
+    if (args.body?.type === 'BlockStatement') {
       const types = args.body.body.map(leaf => leaf.type)
-      if (!types.includes('ReturnStatement') && types.includes('IfStatement')) {
-        args.body.body = [{ type: 'ReturnStatement', argument: getImmediatelyInvokedFunctionExpression(args.body.body) }]
+      if (this.isUMD) {
+        const returnStatements = types.reduce((sum, type) => (sum += type === 'ReturnStatement' ? 1 : 0), 0)
+        if (returnStatements !== 0 || args.body.body.length === 0) return
+        args.body.body = [{
+          type: 'ReturnStatement',
+          argument: getImmediatelyInvokedFunctionExpression(args.body.body)
+        }]
+      } else {
+        if (!types.includes('ReturnStatement') && types.includes('IfStatement')) {
+          args.body.body = [{
+            type: 'ReturnStatement',
+            argument: getImmediatelyInvokedFunctionExpression(args.body.body)
+          }]
+        }
       }
     }
   }

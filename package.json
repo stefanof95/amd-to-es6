@@ -1,6 +1,6 @@
 {
-  "name": "@buxlabs/amd-to-es6",
-  "version": "0.16.3",
+  "name": "@area/amd-to-es6",
+  "version": "0.17.0",
   "description": "convert amd to es6",
   "main": "index.js",
   "scripts": {
@@ -36,11 +36,12 @@
     "standard": "16.0.4"
   },
   "dependencies": {
-    "abstract-syntax-tree": "^2.20.5",
+    "abstract-syntax-tree": "^2.20.6",
     "commander": "8.3.0",
     "glob": "7.2.0",
     "mkdirp": "1.0.4",
-    "pure-utilities": "1.2.4"
+    "pure-utilities": "1.2.4",
+    "meriyah": "^4.3.5"
   },
   "standard": {
     "ignore": [
