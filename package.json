@@ -1,10 +1,10 @@
 {
   "name": "@area/amd-to-es6",
-  "version": "0.17.1",
+  "version": "0.18.0",
   "description": "convert amd to es6",
   "main": "index.js",
   "scripts": {
-    "test-esm-next": "ava test/spec/convert-esm-next.js",
+    "test-namespace": "ava test/spec/convert-namespace.js",
     "test": "ava test/spec/convert.js test/spec/class/Analyzer.js test/spec/bin/cli.js",
     "coverage": "nyc npm test",
     "lint": "standard"

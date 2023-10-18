@@ -1,4 +1,4 @@
-module.exports = function (element, param) {
+module.exports = function (element, param, options) {
   const specifiers = []
   if (param) {
     if (param.type === 'ObjectPattern') {
@@ -10,13 +10,23 @@ module.exports = function (element, param) {
         })
       })
     } else {
-      specifiers.push({
-        type: 'ImportDefaultSpecifier',
-        local: {
-          type: 'Identifier',
-          name: param
-        }
-      })
+      if (options?.dependenciesImportNamespaceSet.has(element)) {
+        specifiers.push({
+          type: 'ImportNamespaceSpecifier',
+          local: {
+            type: 'Identifier',
+            name: param
+          }
+        })
+      } else {
+        specifiers.push({
+          type: 'ImportDefaultSpecifier',
+          local: {
+            type: 'Identifier',
+            name: param
+          }
+        })
+      }
     }
   }
   return {

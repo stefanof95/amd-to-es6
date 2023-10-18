@@ -61,7 +61,7 @@ class Module extends AbstractSyntaxTree {
       }]
     } else {
       this.prepare(define)
-      const imports = this.importer.harvest()
+      const imports = this.importer.harvest(options)
       const exports = this.exporter.harvest()
       const body = this.getBody(define)
       const code = this.getCode(body, options)

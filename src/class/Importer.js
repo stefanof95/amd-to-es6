@@ -18,16 +18,16 @@ module.exports = class Importer extends AbstractSyntaxTree {
     this.analyzer = options.analyzer
   }
 
-  harvest () {
+  harvest (options) {
     const node = this.first('CallExpression[callee.name="define"]')
     if (!isDefineWithDependencies(node)) { return [] }
-    return this.getDefineDependencies(node).concat(
+    return this.getDefineDependencies(node, options).concat(
       this.getRequireSugarDependencies()
     )
   }
 
-  getDefineDependencies (node) {
-    return generateImports(getDefineDependencies(node))
+  getDefineDependencies (node, options) {
+    return generateImports(getDefineDependencies(node), options)
   }
 
   getRequireSugarDependencies () {
