@@ -8,3 +8,11 @@ test('(convert) it works for import all as *', assert => {
     ])
   }))
 })
+
+test('(convert) it works for import as single component', assert => {
+  assert.truthy(convert('amdjs-api/import-single-component-module', {
+    dependenciesImportSingleComponentSet: new Set([
+      'alpha-dep'
+    ])
+  }))
+})

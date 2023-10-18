@@ -10,7 +10,19 @@ module.exports = function (element, param, options) {
         })
       })
     } else {
-      if (options?.dependenciesImportNamespaceSet.has(element)) {
+      if (options?.dependenciesImportSingleComponentSet?.has(element)) {
+        specifiers.push({
+          type: 'ImportSpecifier',
+          local: {
+            type: 'Identifier',
+            name: param
+          },
+          imported: {
+            type: 'Identifier',
+            name: param
+          }
+        })
+      } else if (options?.dependenciesImportNamespaceSet?.has(element)) {
         specifiers.push({
           type: 'ImportNamespaceSpecifier',
           local: {
